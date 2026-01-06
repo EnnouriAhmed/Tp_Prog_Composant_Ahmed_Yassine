@@ -11,9 +11,15 @@ public class FoodFastUtils {
         } else if (n % 5 == 0) {
             return "Buzz";
         }
-        return String.valueOf(n);
+        return "Aucune règle de livraison applicable";
     }
 
+    /* public static String deliveryPlanner(int n){
+        return (n % 3 == 0 && n % 5 == 0) ? "FizzBuzz"
+                : (n % 3 == 0)  ? "Fizz"
+                : (n % 5 == 0)  ? "Buzz"
+                : "Aucune règle de livraison applicable";
+    } */
 
     public static boolean isLeapYear(int year) {
         return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
@@ -21,6 +27,9 @@ public class FoodFastUtils {
 
   
     public static int sumUpTo(int n) {
+        if (n < 0) {
+            return 0;
+        }
         int sum = 0;
         for (int i = 1; i <= n; i++) {
             sum += i;
@@ -32,16 +41,5 @@ public class FoodFastUtils {
     public static String anonymize(String text) {
         StringBuilder sb = new StringBuilder(text);
         return sb.reverse().toString();
-    }
-
-     public static void main(String[] args){
-        System.out.println(FoodFastUtils.deliveryPlanner(2));
-        System.out.println(FoodFastUtils.deliveryPlanner(3));
-        System.out.println(FoodFastUtils.deliveryPlanner(5));
-        System.out.println(FoodFastUtils.deliveryPlanner(7));
-        System.out.println(FoodFastUtils.isLeapYear(2020));
-        System.out.println(FoodFastUtils.isLeapYear(1900));
-        System.out.println(sumUpTo(5));
-        System.out.println(anonymize("kat"));
     }
 }

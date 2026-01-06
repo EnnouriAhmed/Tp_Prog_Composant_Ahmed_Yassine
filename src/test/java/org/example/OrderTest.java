@@ -13,7 +13,7 @@ class OrderTest {
 
     @Test
     void constructor_initializesIdAndPendingStatus() {
-        Customer customer = new Customer("c1", "Ahmed", "Lille");
+        Customer customer = new Customer("C001", "Ahmed", "Lille");
         Order order = new Order(customer, LocalDateTime.now(), null);
 
         assertNotNull(order.getId());
@@ -24,7 +24,7 @@ class OrderTest {
 
     @Test
     void calculateTotalPrice_sumsPrices() {
-        Customer customer = new Customer("c1", "Ahmed", "Lille");
+        Customer customer = new Customer("C002", "Yassine", "Lille");
         Dish d1 = new Dish("Burger", new BigDecimal("10.00"), DishSize.MEDIUM);
         Dish d2 = new Dish("Fries", new BigDecimal("3.50"), DishSize.SMALL);
 
@@ -39,7 +39,7 @@ class OrderTest {
 
     @Test
     void equalsAndHashCode_sameOrderIdAndContent() {
-        Customer customer = new Customer("c1", "Ahmed", "Lille");
+        Customer customer = new Customer("C001", "Ahmed", "Lille");
         Dish d1 = new Dish("Burger", new BigDecimal("10.00"), DishSize.MEDIUM);
 
         Map<Dish, Integer> dishes = new HashMap<>();
@@ -54,7 +54,7 @@ class OrderTest {
 
     @Test
     void toString_containsKeyInfo() {
-        Customer customer = new Customer("c1", "Ahmed", "Lille");
+        Customer customer = new Customer("C001", "Yassine", "Lille");
         Order order = new Order(customer, LocalDateTime.of(2026, 1, 4, 12, 0), null);
         String s = order.toString();
 

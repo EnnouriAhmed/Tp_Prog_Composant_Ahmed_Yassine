@@ -28,8 +28,7 @@ public class Customer {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Customer)) return false;
-        Customer customer = (Customer) o;
+        if (!(o instanceof Customer customer)) return false;
         return Objects.equals(id, customer.id)
                 && Objects.equals(name, customer.name)
                 && Objects.equals(address, customer.address);
@@ -37,11 +36,15 @@ public class Customer {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, address);
+        return Objects.hash(getId(), getName(), getAddress());
     }
 
     @Override
     public String toString() {
-        return "Customer{id='" + id + "', name='" + name + "', address='" + address + "'}";
+        return "Customer{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                '}';
     }
 }

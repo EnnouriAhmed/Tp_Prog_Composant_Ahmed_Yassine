@@ -8,8 +8,8 @@ class CustomerTest {
 
     @Test
     void equalsAndHashCode_sameValues() {
-        Customer c1 = new Customer("c1", "Ahmed", "Lille");
-        Customer c2 = new Customer("c1", "Ahmed", "Lille");
+        Customer c1 = new Customer("c001", "Ahmed", "Lille");
+        Customer c2 = new Customer("c001", "Ahmed", "Lille");
 
         assertEquals(c1, c2);
         assertEquals(c1.hashCode(), c2.hashCode());
@@ -17,8 +17,8 @@ class CustomerTest {
 
     @Test
     void equals_differentValues() {
-        Customer c1 = new Customer("c1", "Ahmed", "Lille");
-        Customer c2 = new Customer("c2", "Ahmed", "Lille");
+        Customer c1 = new Customer("c001", "Ahmed", "Lille");
+        Customer c2 = new Customer("C002", "Yassine", "10 rue de Paris, Lille");
 
         assertNotEquals(c1, c2);
     }

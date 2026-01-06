@@ -29,7 +29,7 @@ public class Dish {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Dish)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Dish dish = (Dish) o;
         return Objects.equals(name, dish.name)
                 && Objects.equals(price, dish.price)
@@ -38,11 +38,15 @@ public class Dish {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, price, size);
+        return Objects.hash(getName(), getPrice(), getSize());
     }
 
     @Override
     public String toString() {
-        return "Dish{name='" + name + "', price=" + price + ", size=" + size + "}";
+        return "Dish{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                ", size=" + size +
+                '}';
     }
 }

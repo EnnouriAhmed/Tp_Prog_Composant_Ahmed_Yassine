@@ -2,7 +2,6 @@ package org.example;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -18,8 +17,8 @@ public class Order {
     public Order(Customer customer, LocalDateTime orderDate, Map<Dish, Integer> dishes) {
         this.id = UUID.randomUUID().toString();
         this.status = OrderStatus.PENDING;
-        this.customer = customer;
-        this.orderDate = orderDate;
+        this.customer = Objects.requireNonNull(customer, "customer must not be null");
+        this.orderDate = Objects.requireNonNull(orderDate, "orderDate must not be null");
         this.dishes = new HashMap<>();
         if (dishes != null) {
             this.dishes.putAll(dishes);
@@ -35,11 +34,21 @@ public class Order {
     }
 
     public void setStatus(OrderStatus status) {
-        this.status = status;
+        this.status = Objects.requireNonNull(status, "status must not be null");
     }
 
     public Map<Dish, Integer> getDishes() {
-        return Collections.unmodifiableMap(dishes);
+        return Map.copyOf(dishes);
+    }
+
+    public void addDish(Dish dish, int quantity) {
+        if (dish == null) {
+            throw new IllegalArgumentException("dish cannot be null");
+        }
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("quantity must be positive");
+        }
+        dishes.merge(dish, quantity, Integer::sum);
     }
 
     public Customer getCustomer() {
@@ -65,8 +74,7 @@ public class Order {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Order)) return false;
-        Order order = (Order) o;
+        if (!(o instanceof Order order)) return false;
         return Objects.equals(id, order.id)
                 && status == order.status
                 && Objects.equals(dishes, order.dishes)
@@ -76,7 +84,7 @@ public class Order {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, status, dishes, customer, orderDate);
+        return Objects.hash(getId(), getStatus(), getDishes(), getCustomer(), getOrderDate());
     }
 
     @Override

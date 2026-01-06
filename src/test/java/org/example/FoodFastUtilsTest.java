@@ -2,6 +2,8 @@ package org.example;
 
 import org.junit.jupiter.api.Test;
 
+import static org.example.FoodFastUtils.*;
+import static org.example.FoodFastUtils.sumUpTo;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FoodFastUtilsTest {
@@ -10,64 +12,82 @@ class FoodFastUtilsTest {
     // Q2a - deliveryPlanner
     // -----------------------
     @Test
-    void deliveryPlanner_multipleOf3_returnsFizz() {
-        assertEquals("Fizz", FoodFastUtils.deliveryPlanner(3));
-        assertEquals("Fizz", FoodFastUtils.deliveryPlanner(6));
+    void testDeliveryPlannerDivisibleBy3() {
+        assertEquals("Fizz", deliveryPlanner(9),
+                "9 est divisible par 3 → doit renvoyer 'Fizz'");
     }
 
     @Test
-    void deliveryPlanner_multipleOf5_returnsBuzz() {
-        assertEquals("Buzz", FoodFastUtils.deliveryPlanner(5));
-        assertEquals("Buzz", FoodFastUtils.deliveryPlanner(10));
+    void testDeliveryPlannerDivisibleBy5() {
+        assertEquals("Buzz", deliveryPlanner(10),
+                "10 est divisible par 5 → doit renvoyer 'Buzz'");
     }
 
     @Test
-    void deliveryPlanner_multipleOf3And5_returnsFizzBuzz() {
-        assertEquals("FizzBuzz", FoodFastUtils.deliveryPlanner(15));
-        assertEquals("FizzBuzz", FoodFastUtils.deliveryPlanner(30));
+    void testDeliveryPlannerDivisibleBy3And5() {
+        assertEquals("FizzBuzz", deliveryPlanner(15),
+                "15 est divisible par 3 et 5 → doit renvoyer 'FizzBuzz'");
     }
 
     @Test
-    void deliveryPlanner_other_returnsNumberAsString() {
-        assertEquals("1", FoodFastUtils.deliveryPlanner(1));
-        assertEquals("7", FoodFastUtils.deliveryPlanner(7));
+    void testDeliveryPlannerNotDivisibleBy2or3or5() {
+        assertEquals("Aucune règle de livraison applicable", deliveryPlanner(7),
+                "7 n’est divisible ni par 3 ni par 5 → doit renvoyer un message");
     }
 
     // -----------------------
     // Q2b - isLeapYear
     // -----------------------
     @Test
-    void isLeapYear_divisibleBy4_andNotBy100_isTrue() {
-        assertTrue(FoodFastUtils.isLeapYear(2024));
-        assertTrue(FoodFastUtils.isLeapYear(1996));
+    void testIsLeapYearDivisibleBy4ButNot100() {
+        assertTrue(isLeapYear(2024));
     }
 
     @Test
-    void isLeapYear_divisibleBy100_andNotBy400_isFalse() {
-        assertFalse(FoodFastUtils.isLeapYear(1900));
-        assertFalse(FoodFastUtils.isLeapYear(2100));
+    void testIsLeapYearDivisibleBy100ButNot400() {
+        assertFalse(isLeapYear(1900));
     }
 
     @Test
-    void isLeapYear_divisibleBy400_isTrue() {
-        assertTrue(FoodFastUtils.isLeapYear(2000));
-        assertTrue(FoodFastUtils.isLeapYear(2400));
+    void testIsLeapYearDivisibleBy400() {
+        assertTrue(isLeapYear(2000));
     }
 
     @Test
-    void isLeapYear_notDivisibleBy4_isFalse() {
-        assertFalse(FoodFastUtils.isLeapYear(2023));
-        assertFalse(FoodFastUtils.isLeapYear(2019));
+    void testIsLeapYearNotDivisibleBy4() {
+        assertFalse(isLeapYear(2023));
+    }
+
+    @Test
+    void testIsLeapYearBoundaryValues() {
+        assertFalse(isLeapYear(1));
+        assertTrue(isLeapYear(4));
+        assertFalse(isLeapYear(100));
+        assertTrue(isLeapYear(400));
     }
 
     // -----------------------
     // Q3a - sumUpTo
     // -----------------------
     @Test
-    void sumUpTo_basicCases() {
-        assertEquals(1, FoodFastUtils.sumUpTo(1));
-        assertEquals(3, FoodFastUtils.sumUpTo(2));  // 1+2
-        assertEquals(55, FoodFastUtils.sumUpTo(10));
+    void testSumUpToNumberEqualToZero() {
+        assertEquals(0,sumUpTo(0));
+    }
+
+    @Test
+    void testSumUpToNumberEqualToOne() {
+        assertEquals(1,sumUpTo(1));
+    }
+
+    @Test
+    void testSumUpToNumberGreaterThanZero(){
+        assertEquals(10,sumUpTo(4));
+        assertEquals(15,sumUpTo(5));
+    }
+
+    @Test
+    void testSumUpToNumberLessThanZero(){
+        assertEquals(0, sumUpTo(-2));
     }
 
     // -----------------------
