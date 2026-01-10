@@ -1,11 +1,15 @@
 package org.example;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Application {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         // =====================================================================================
         // Partie 1 : Initialisation du Projet et Algorithmes de Base
@@ -19,7 +23,7 @@ public class Application {
 
         // ── Question 2 ───────────────────────────────────────────────────────────────────────
         System.out.println("\n===============================================");
-        System.out.println("  Q2a — Planificateur de livraison (FizzBuzz) ");
+        System.out.println("  Q2a : Planificateur de livraison (FizzBuzz) ");
         System.out.println("===============================================");
 
         System.out.println("deliveryPlanner(3)  → "
@@ -35,7 +39,7 @@ public class Application {
                 + FoodFastUtils.deliveryPlanner(7));
 
         System.out.println("\n===============================================");
-        System.out.println("  Q2b — Calcul de promotions (Année Bissextile)");
+        System.out.println("  Q2b : Calcul de promotions (Année Bissextile)");
         System.out.println("===============================================");
 
         // Règle 1 : divisible par 400 → bissextile
@@ -64,7 +68,7 @@ public class Application {
 
         // ── Question 3 ───────────────────────────────────────────────────────────────────────
         System.out.println("\n===============================================");
-        System.out.println("  Q3a — Somme des entiers");
+        System.out.println("  Q3a : Somme des entiers");
         System.out.println("===============================================");
 
         // Cas standard
@@ -92,7 +96,7 @@ public class Application {
         );
 
         System.out.println("\n===============================================");
-        System.out.println("  Q3b — Anonymisation");
+        System.out.println("  Q3b : Anonymisation");
         System.out.println("===============================================");
 
 
@@ -125,7 +129,7 @@ public class Application {
         // =====================================================================================
 
         System.out.println("\n===============================================");
-        System.out.println("  Q4 — Anonymisation");
+        System.out.println("  Q4 : Anonymisation");
         System.out.println("===============================================");
 
         // 1) Création des plats (Dish)
@@ -171,7 +175,7 @@ public class Application {
         }
 
         System.out.println("\n===============================================");
-        System.out.println("  Q5 — La Plateforme de Livraison");
+        System.out.println("  Q5 : La Plateforme de Livraison");
         System.out.println("===============================================");
 
         // 1) Plateforme
@@ -201,7 +205,7 @@ public class Application {
         );
 
         System.out.println("\n===============================================");
-        System.out.println("  Q6 — Recherche Avancée de Commandes");
+        System.out.println("  Q6 : Recherche Avancée de Commandes");
         System.out.println("===============================================");
 
         // --- Recherche par client ---
@@ -221,7 +225,7 @@ public class Application {
         }
 
         System.out.println("\n===============================================");
-        System.out.println("  Q7 — Gestion des Erreurs de Préparation");
+        System.out.println("  Q7 : Gestion des Erreurs de Préparation");
         System.out.println("===============================================");
 
         // --- Un cas "problématique" (20% de chances de lancer l'exception) ---
@@ -266,5 +270,66 @@ public class Application {
         platform3.placeOrder(order5);
 
         System.out.println("Order5 (garanti succès): " + order5.getId() + " -> " + order5.getStatus());
+
+        // =====================================================================================
+        // Partie 4 : Concurrence & Sécurité
+        // =====================================================================================
+
+        System.out.println("\n===============================================");
+        System.out.println("  Q8 : Montée en Charge (Concurrence)");
+        System.out.println("===============================================");
+
+        DeliveryPlatform platform4 = new DeliveryPlatform();
+
+        int restaurants = 8;
+        int ordersPerRestaurant = 100;
+
+        ExecutorService pool = Executors.newFixedThreadPool(restaurants);
+
+        CountDownLatch start = new CountDownLatch(1);
+        CountDownLatch done = new CountDownLatch(restaurants);
+
+        for (int r = 0; r < restaurants; r++) {
+            final int restaurantId = r;
+
+            pool.submit(() -> {
+                try {
+                    start.await();
+                    Customer customer = new Customer("C-" + restaurantId,
+                            "Customer " + restaurantId,
+                            "Address " + restaurantId);
+
+                    for (int i = 0; i < ordersPerRestaurant; i++) {
+                        Order order = new Order(customer, LocalDateTime.now(), Map.of());
+                        platform4.placeOrder(order);
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } finally {
+                    done.countDown();
+                }
+            });
+        }
+
+        start.countDown();
+        done.await();
+
+        pool.shutdown();
+
+        System.out.println("Total orders stored: " + platform4.countOrders());
+        System.out.println("In preparation: " + platform4.findOrdersByStatus(OrderStatus.IN_PREPARATION).size());
+        System.out.println("Completed: " + platform4.findOrdersByStatus(OrderStatus.COMPLETED).size());
+        System.out.println("Cancelled: " + platform4.findOrdersByStatus(OrderStatus.CANCELLED).size());
+
+        System.out.println("\n===============================================");
+        System.out.println("  Q9 : Persistance en Base de Données (JDBC)");
+        System.out.println("===============================================");
+
+        try (Connection conn = Db.getConnection()) {
+            platform4.saveOrder(conn, order1);
+            System.out.println("Order saved in DB: " + order1.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
